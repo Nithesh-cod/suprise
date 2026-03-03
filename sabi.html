@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surprise Sabitha 🎉</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    animation: bgShift 12s ease infinite alternate;
+  }
+
+  @keyframes bgShift {
+    0%   { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+    33%  { background: linear-gradient(135deg, #fbc2eb, #a6c1ee); }
+    66%  { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
+    100% { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+  }
+
+  /* ── Music Overlay ── */
+  #musicOverlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.65);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(8px);
+    animation: fadeIn 0.6s ease;
+  }
+
+  #musicOverlay .overlay-card {
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.4);
+    border-radius: 30px;
+    padding: 50px 40px;
+    max-width: 380px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) 0.2s both;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.6); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  .note-icon {
+    font-size: 72px;
+    display: block; margin-bottom: 16px;
+    animation: noteBounce 1s ease infinite alternate;
+  }
+
+  @keyframes noteBounce {
+    0%   { transform: translateY(0) rotate(-6deg); }
+    100% { transform: translateY(-14px) rotate(6deg); }
+  }
+
+  #musicOverlay h2 {
+    color: #fff; font-size: 1.5rem; font-weight: 700;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    margin-bottom: 10px;
+  }
+
+  #musicOverlay p {
+    color: rgba(255,255,255,0.85); font-size: 0.95rem;
+    margin-bottom: 28px; line-height: 1.6;
+  }
+
+  #playMusicBtn {
+    padding: 14px 38px; font-size: 1.05rem; font-weight: 700;
+    border: none; border-radius: 50px;
+    background: linear-gradient(135deg, #ff4d6d, #ff8fab);
+    color: #fff; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(255,77,109,0.55);
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: btnPulse 1.5s ease infinite;
+  }
+
+  #playMusicBtn:hover { transform: scale(1.08); box-shadow: 0 10px 30px rgba(255,77,109,0.75); }
+
+  @keyframes btnPulse {
+    0%,100% { box-shadow: 0 6px 20px rgba(255,77,109,0.55); }
+    50%      { box-shadow: 0 6px 36px rgba(255,77,109,0.9); }
+  }
+
+  /* ── Floating music toggle ── */
+  #musicToggle {
+    position: fixed; bottom: 22px; right: 22px;
+    width: 54px; height: 54px; border-radius: 50%;
+    background: linear-gradient(135deg, #ff4d6d, #ff8fab);
+    border: none; font-size: 22px; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(255,77,109,0.55);
+    z-index: 9000; display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s;
+  }
+
+  #musicToggle:hover { transform: scale(1.15) rotate(12deg); }
+  #musicToggle.spinning { animation: spinNote 1.2s linear infinite; }
+
+  @keyframes spinNote {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  /* ── Sections ── */
+  .section {
+    display: none;
+    min-height: 100vh;
+    padding: 60px 20px 80px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .section.active {
+    display: flex;
+    animation: sectionEnter 0.7s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+
+  @keyframes sectionEnter {
+    from { opacity: 0; transform: translateY(45px) scale(0.94); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: blur(14px);
+    border: 1.5px solid rgba(255,255,255,0.5);
+    border-radius: 30px;
+    padding: 42px 34px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 18px 52px rgba(0,0,0,0.18);
+  }
+
+  h1 {
+    font-size: clamp(1.5rem, 5vw, 2.3rem);
+    font-weight: 700; color: #fff;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.3);
+    margin-bottom: 14px;
+    animation: shimmer 3s ease infinite;
+  }
+
+  @keyframes shimmer {
+    0%,100% { text-shadow: 0 3px 12px rgba(0,0,0,0.3); }
+    50%      { text-shadow: 0 3px 24px rgba(255,255,100,0.7), 0 0 40px rgba(255,200,0,0.3); }
+  }
+
+  h2 {
+    font-size: clamp(1.05rem, 3.5vw, 1.45rem);
+    font-weight: 600; color: #fff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    margin-bottom: 12px; line-height: 1.65;
+  }
+
+  h3 {
+    font-size: clamp(0.95rem, 3vw, 1.2rem);
+    font-weight: 600; color: rgba(255,255,255,0.9);
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 1rem; color: rgba(255,255,255,0.9);
+    line-height: 1.75; margin-bottom: 10px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.18);
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-block;
+    padding: 14px 34px; font-size: 1rem; font-weight: 700;
+    border: none; border-radius: 50px;
+    background: linear-gradient(135deg, #ff4d6d, #ff8fab);
+    color: #fff; cursor: pointer; margin-top: 22px;
+    box-shadow: 0 6px 20px rgba(255,77,109,0.45);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative; overflow: hidden;
+  }
+
+  .btn::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.22), transparent);
+    border-radius: inherit;
+    opacity: 0; transition: opacity 0.2s;
+  }
+
+  .btn:hover { transform: scale(1.09) translateY(-3px); box-shadow: 0 12px 32px rgba(255,77,109,0.65); }
+  .btn:hover::after { opacity: 1; }
+  .btn:active { transform: scale(0.97); }
+
+  /* ── Emoji Animations ── */
+  .big-emoji {
+    font-size: 80px; display: block; margin: 0 auto 14px;
+    filter: drop-shadow(0 6px 14px rgba(0,0,0,0.2));
+  }
+
+  .cake { animation: cakeDance 1.4s ease-in-out infinite alternate; }
+  @keyframes cakeDance {
+    0%   { transform: translateY(0) rotate(-4deg) scale(1); }
+    50%  { transform: translateY(-18px) rotate(4deg) scale(1.08); }
+    100% { transform: translateY(0) rotate(-4deg) scale(1); }
+  }
+
+  .trophy { animation: trophyGlow 2s ease-in-out infinite alternate; }
+  @keyframes trophyGlow {
+    0%   { transform: rotate(-6deg) scale(1); filter: drop-shadow(0 6px 12px rgba(255,200,0,0.3)); }
+    100% { transform: rotate(6deg) scale(1.12); filter: drop-shadow(0 6px 24px rgba(255,200,0,0.8)); }
+  }
+
+  .choco { animation: chocoWiggle 1.2s ease-in-out infinite; }
+  @keyframes chocoWiggle {
+    0%,100% { transform: rotate(-5deg) scale(1); }
+    50%     { transform: rotate(5deg) scale(1.1); }
+  }
+
+  /* ── Photo Frame ── */
+  .photo-frame {
+    position: relative; display: inline-block; margin: 18px auto;
+  }
+
+  .photo-frame img {
+    width: 220px; height: 220px;
+    object-fit: cover; border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.85);
+    box-shadow: 0 0 0 8px rgba(255,255,255,0.2), 0 16px 40px rgba(0,0,0,0.28);
+    animation: imgPulse 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes imgPulse {
+    0%   { box-shadow: 0 0 0 8px rgba(255,255,255,0.2), 0 16px 40px rgba(0,0,0,0.28); }
+    100% { box-shadow: 0 0 0 18px rgba(255,180,200,0.45), 0 20px 50px rgba(255,80,120,0.4); }
+  }
+
+  /* ── Ribbon ── */
+  .ribbon {
+    display: inline-block;
+    background: linear-gradient(135deg,#ffcc00,#ff9a00);
+    color: #fff; font-weight: 700; font-size: 0.88rem;
+    padding: 6px 22px; border-radius: 50px; margin-bottom: 14px;
+    box-shadow: 0 4px 14px rgba(255,160,0,0.45);
+    animation: ribbonWave 2s ease infinite;
+  }
+
+  @keyframes ribbonWave {
+    0%,100% { transform: rotate(-1.5deg) scale(1); }
+    50%     { transform: rotate(1.5deg) scale(1.06); }
+  }
+
+  /* ── Stars ── */
+  .stars-row {
+    font-size: 1.8rem; letter-spacing: 6px; margin: 10px 0;
+    animation: starGlow 1.5s ease infinite alternate;
+  }
+
+  @keyframes starGlow {
+    0%   { filter: brightness(1); }
+    100% { filter: brightness(1.7) drop-shadow(0 0 8px gold); }
+  }
+
+  /* ── Floating Hearts ── */
+  .heart {
+    position: fixed; pointer-events: none;
+    z-index: 1; user-select: none;
+    animation: floatHeart linear forwards;
+  }
+
+  @keyframes floatHeart {
+    0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+    80%  { opacity: 0.7; }
+    100% { transform: translateY(-105vh) rotate(30deg) scale(0.4); opacity: 0; }
+  }
+
+  /* ── Confetti ── */
+  .confetti-piece {
+    position: fixed; z-index: 9999;
+    pointer-events: none;
+    animation: confettiFall linear forwards;
+  }
+
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ── Sparkles ── */
+  .sparkle {
+    position: fixed; pointer-events: none; z-index: 5;
+    animation: sparklePop ease-out forwards;
+  }
+
+  @keyframes sparklePop {
+    0%   { transform: scale(0) rotate(0deg); opacity: 1; }
+    50%  { transform: scale(1.5) rotate(180deg); opacity: 1; }
+    100% { transform: scale(0) rotate(360deg); opacity: 0; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,77,109,0.5); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ── Music Overlay ── -->
+<div id="musicOverlay">
+  <div class="overlay-card">
+    <span class="note-icon">🎵</span>
+    <h2>A Surprise Awaits You!</h2>
+    <p>Tap below to start the music<br>and open your special surprise 🎁</p>
+    <button id="playMusicBtn" onclick="startExperience()">▶ Play &amp; Open Surprise</button>
+  </div>
+</div>
+
+<!-- ── Floating Music Toggle ── -->
+<button id="musicToggle" onclick="toggleMusic()" title="Play / Pause Music">🎵</button>
+
+<!-- ── Background Music ── -->
+<audio id="bgMusic" src="N:\vai\Singappenney-Downringtone.com.mp3.mpeg" loop></audio>
+
+<!-- ══ SECTION 1 ══ -->
+<div id="section1" class="section active">
+  <div class="card">
+    <span class="big-emoji" style="animation: noteBounce 1s ease infinite alternate;">🌸</span>
+    <h1>Hi Sabitha cutiee 😍💕❤️</h1>
+    <p>Something very special is waiting for you…</p>
+    <button class="btn" onclick="nextSection(2)">Click Here ✨</button>
+  </div>
+</div>
+
+<!-- ══ SECTION 2 ══ -->
+<div id="section2" class="section">
+  <div class="card">
+    <span class="big-emoji" style="animation: chocoWiggle 1.2s ease infinite;">🤔</span>
+    <h2>Are you the daughter of<br>Anandan &amp; Amsavalli?</h2>
+    <h2>And sister of Vaishnavi &amp; Sabitha?</h2>
+    <p>If yes, click below! 😌</p>
+    <button class="btn" onclick="nextSection(3)">Yes, That's Me! 💖</button>
+  </div>
+</div>
+
+<!-- ══ SECTION 3 ══ -->
+<div id="section3" class="section">
+  <div class="card">
+    <span class="big-emoji choco">🍫</span>
+    <h2>Hi Sabitha 💕</h2>
+    <p>Here is one chocolate just for you!</p>
+    <div class="photo-frame">
+      <img src="N:\vai\choco.jpg.jpeg" alt="Chocolate"
+           onerror="this.style.display='none';document.getElementById('choco-fb').style.display='block'">
+    </div>
+    <span id="choco-fb" style="display:none;font-size:90px;">🍫</span>
+    <button class="btn" onclick="nextSection(4)">Next Surprise 🎁</button>
+  </div>
+</div>
+
+<!-- ══ SECTION 4 ══ -->
+<div id="section4" class="section">
+  <div class="card">
+    <span class="big-emoji cake">🎂</span>
+    <h2>Let's Cut the Cake!</h2>
+    <div class="photo-frame">
+      <img src="N:\vai\cake.jpg.jpeg" alt="Birthday Cake"
+           onerror="this.style.display='none';document.getElementById('cake-fb').style.display='block'">
+    </div>
+    <span id="cake-fb" style="display:none;font-size:90px;">🎂</span>
+    <button class="btn" onclick="nextSection(5); burstSparkles()">Cut the Cake ✨</button>
+  </div>
+</div>
+
+<!-- ══ SECTION 5 ══ -->
+<div id="section5" class="section">
+  <div class="card">
+    <span class="big-emoji trophy">🏆</span>
+    <div class="ribbon">🎉 BIG ANNOUNCEMENT 🎉</div>
+    <h1>Congratulations Sabitha!</h1>
+    <div class="stars-row">⭐ ⭐ ⭐ ⭐ ⭐</div>
+    <h2>You have passed the<br>NMMS Exam! 🎓</h2>
+    <h3>2nd Rank in Your School 🏫</h3>
+    <p>We are so incredibly proud of you 💕<br>Keep shining always ✨</p>
+    <button class="btn" onclick="nextSection(6); startConfetti()">See Special Memory 📸</button>
+  </div>
+</div>
+
+<!-- ══ SECTION 6 ══ -->
+<div id="section6" class="section">
+  <div class="card">
+    <div class="ribbon">Our Champion 👑</div>
+    <h1>You Did It, Sabitha! 💖</h1>
+    <div class="photo-frame">
+      <img src="N:\vai\WhatsApp Image 2026-03-03 at 6.15.07 PM.jpeg" alt="Sabitha — Our Champion"
+           onerror="this.style.display='none';document.getElementById('champ-fb').style.display='block'">
+    </div>
+    <span id="champ-fb" style="display:none;font-size:90px;">🌟</span>
+    <div class="stars-row">🌟 🌟 🌟</div>
+    <p>Always believe in yourself 🌈<br>The world is yours! 💫</p>
+  </div>
+</div>
+
+<script>
+  /* ── Overlay / Music ── */
+  function startExperience() {
+    const music = document.getElementById('bgMusic');
+    music.play().catch(() => {});
+    document.getElementById('musicOverlay').style.display = 'none';
+    document.getElementById('musicToggle').classList.add('spinning');
+  }
+
+  function toggleMusic() {
+    const music = document.getElementById('bgMusic');
+    const btn   = document.getElementById('musicToggle');
+    if (music.paused) {
+      music.play();
+      btn.classList.add('spinning');
+      btn.textContent = '🎵';
+    } else {
+      music.pause();
+      btn.classList.remove('spinning');
+      btn.textContent = '⏸';
+    }
+  }
+
+  /* ── Navigation ── */
+  function nextSection(n) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById('section' + n).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    burstSparkles();
+  }
+
+  /* ── Floating Hearts ── */
+  const HEARTS = ['❤️','💕','💖','💗','💓','💝','🌸','✨','🎀'];
+  function createHeart() {
+    const el = document.createElement('div');
+    el.className = 'heart';
+    el.textContent = HEARTS[Math.floor(Math.random() * HEARTS.length)];
+    el.style.left   = Math.random() * 100 + 'vw';
+    el.style.bottom = '-30px';
+    const dur = 4 + Math.random() * 4;
+    el.style.animationDuration = dur + 's';
+    el.style.fontSize = (13 + Math.random() * 16) + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), dur * 1000);
+  }
+  setInterval(createHeart, 350);
+
+  /* ── Confetti ── */
+  function startConfetti() {
+    for (let i = 0; i < 150; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left  = Math.random() * 100 + 'vw';
+        el.style.top   = '-12px';
+        el.style.width = el.style.height = (7 + Math.random() * 9) + 'px';
+        el.style.backgroundColor = `hsl(${Math.random() * 360}, 78%, 62%)`;
+        el.style.borderRadius    = Math.random() > 0.5 ? '50%' : '2px';
+        el.style.animationDuration = (2 + Math.random() * 3) + 's';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 5500);
+      }, i * 22);
+    }
+  }
+
+  /* ── Sparkle Burst ── */
+  const SPARKLES = ['✨','⭐','💫','🌟','🎉','🎊'];
+  function burstSparkles() {
+    for (let i = 0; i < 20; i++) {
+      const el = document.createElement('div');
+      el.className = 'sparkle';
+      el.textContent = SPARKLES[Math.floor(Math.random() * SPARKLES.length)];
+      el.style.left  = (8 + Math.random() * 84) + 'vw';
+      el.style.top   = (8 + Math.random() * 84) + 'vh';
+      el.style.fontSize = (16 + Math.random() * 16) + 'px';
+      el.style.animationDuration = (0.5 + Math.random() * 0.9) + 's';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1600);
+    }
+  }
+</script>
+</body>
+</html>
